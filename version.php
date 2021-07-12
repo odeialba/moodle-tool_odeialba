@@ -15,22 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   plugintype_pluginname
- * @copyright 2020, You Name <your@email.address>
+ * @package   tool_odeialba
+ * @copyright 2020, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = TODO;
-$plugin->requires = TODO;
-$plugin->supported = TODO;   // Available as of Moodle 3.9.0 or later.
-$plugin->incompatible = TODO;   // Available as of Moodle 3.9.0 or later.
-$plugin->component = 'TODO_FRANKENSTYLE';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'TODO';
-
-$plugin->dependencies = [
-    'mod_forum' => ANY_VERSION,
-    'mod_data' => TODO
-];
+$plugin->component = 'tool_odeialba';
+$plugin->version = 2021071200;
+$plugin->requires = 2021070100;
+$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = '1.0';
