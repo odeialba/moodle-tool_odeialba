@@ -16,7 +16,7 @@
 
 /**
  * @package   tool_odeialba
- * @copyright 2020, Odei Alba <odeialba@odeialba.com>
+ * @copyright 2021, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
