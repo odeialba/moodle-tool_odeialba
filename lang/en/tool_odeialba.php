@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * English translations for my first plugin
+ *
  * @package   tool_odeialba
  * @copyright 2021, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
