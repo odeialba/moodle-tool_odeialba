@@ -15,12 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * English translations for my first plugin
+ * Main index file for my plugin
  *
  * @package   tool_odeialba
  * @copyright 2021, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'My first Moodle plugin';
-$string['helloworld'] = 'Hello World!';
+require_once(__DIR__ . '/../../../config.php');
+
+require_login();
+
+$url = new moodle_url('/admin/tool/odeialba/index.php');
+
+$PAGE->set_context(context_system::instance());
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('report');
+$PAGE->set_title('Hello to my first plugin');
+$PAGE->set_heading(get_string('pluginname', 'tool_odeialba'));
+
+echo get_string('helloworld', 'tool_odeialba');
