@@ -26,12 +26,21 @@ require_once(__DIR__ . '/../../../config.php');
 
 require_login();
 
+$courseid = optional_param('id', 0, PARAM_INT);
+
 $url = new moodle_url('/admin/tool/odeialba/index.php');
+$title = get_string('pluginname', 'tool_odeialba');
+$heading = get_string('pluginheading', 'tool_odeialba');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('report');
-$PAGE->set_title('Hello to my first plugin');
-$PAGE->set_heading(get_string('pluginname', 'tool_odeialba'));
+$PAGE->set_heading($heading);
 
-echo get_string('helloworld', 'tool_odeialba');
+echo $OUTPUT->header();
+echo $OUTPUT->heading($title);
+
+echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
+echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
+
+echo $OUTPUT->footer();

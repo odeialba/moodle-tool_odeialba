@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_odeialba';
-$plugin->version = 2021071300;
+$plugin->version = 2021071400;
 $plugin->requires = 2021070100;
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '1.1';
+$plugin->release = '1.2';
