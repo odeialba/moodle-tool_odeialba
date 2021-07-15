@@ -34,6 +34,14 @@
 function tool_odeialba_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context) {
     $pluginname = get_string('pluginname', 'tool_odeialba');
     $url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $course->id]);
-    $thingnode = $navigation->add($pluginname, $url);
+    $icon = new pix_icon('icon', '', 'tool_odeialba');
+    $thingnode = $navigation->add(
+            $pluginname,
+            $url,
+            navigation_node::TYPE_SETTING,
+            $pluginname,
+            'odeialba',
+            $icon
+    );
     $thingnode->make_active();
 }
