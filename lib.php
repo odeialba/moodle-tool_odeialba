@@ -15,33 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Main index file for my plugin
+ * Library of the new plugin
  *
  * @package   tool_odeialba
  * @copyright 2021, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../../config.php');
-
-$courseid = required_param('id', PARAM_INT);
-
-require_login($courseid);
-
-$url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
-$title = get_string('pluginname', 'tool_odeialba');
-$heading = get_string('pluginheading', 'tool_odeialba');
-
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url($url);
-$PAGE->set_pagelayout('report');
-$PAGE->set_heading($heading);
-$PAGE->set_title($title);
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading($title);
-
-echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
-echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
-
-echo $OUTPUT->footer();
+/**
+ * Adds the plugin to the course breadcrumbs
+ *
+ * @param navigation_node $navigation
+ * @param stdClass $course
+ * @param context_course $context
+ * @throws coding_exception
+ * @throws moodle_exception
+ */
+function tool_odeialba_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context) {
+    $pluginname = get_string('pluginname', 'tool_odeialba');
+    $url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $course->id]);
+    $thingnode = $navigation->add($pluginname, $url);
+    $thingnode->make_active();
+}
