@@ -25,4 +25,6 @@
 $string['pluginname'] = 'My first Moodle plugin';
 $string['pluginheading'] = 'This is the heading';
 $string['helloworld'] = 'Hello World!';
-$string['currentcourseid'] = 'Courrent course ID is {$a}';
+$string['currentcourseid'] = 'Current course ID is {$a}';
+$string['totalusers'] = 'There are {$a} users in this moodle';
+$string['currentcoursename'] = 'Current course name is {$a}';
