@@ -42,13 +42,13 @@ $coutusers = $DB->count_records_sql("SELECT COUNT(id) FROM {user}");
 $currentcourse = $DB->get_record_sql("SELECT * FROM {course} WHERE id = ?", [$courseid]);
 $allusers = $DB->get_records('user');
 $userstable = new html_table();
-$userstable->head = array(
+$userstable->head = [
     'ID',
     'Username',
-);
+];
 
 foreach ($allusers as $user) {
-    $oneuser = array($user->id, $user->username);
+    $oneuser = [$user->id, $user->username];
     $userstable->data[] = $oneuser;
 }
 
@@ -59,6 +59,5 @@ echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
 echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
 echo html_writer::table($userstable);
 echo html_writer::div(get_string('currentcoursename', 'tool_odeialba', $currentcourse->fullname));
-
 
 echo $OUTPUT->footer();
