@@ -47,10 +47,6 @@ $userstable->head = [
     'Username',
 ];
 
-$mytable = new \tool_odeialba\tool_odeialba_table();
-
-// var_dump($mytable->columns);die;
-
 foreach ($allusers as $user) {
     $oneuser = [$user->id, $user->username];
     $userstable->data[] = $oneuser;
@@ -63,5 +59,9 @@ echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
 echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
 echo html_writer::table($userstable);
 echo html_writer::div(get_string('currentcoursename', 'tool_odeialba', $currentcourse->fullname));
+
+$mytable = new \tool_odeialba\tool_odeialba_table($url);
+$mytable->get_by_id($courseid);
+$mytable->out(100, false);
 
 echo $OUTPUT->footer();
