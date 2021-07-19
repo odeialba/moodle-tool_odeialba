@@ -28,3 +28,11 @@ $string['helloworld'] = 'Hello World!';
 $string['currentcourseid'] = 'Current course ID is {$a}';
 $string['totalusers'] = 'There are {$a} users in this moodle';
 $string['currentcoursename'] = 'Current course name is {$a}';
+
+$string['id'] = 'ID';
+$string['courseid'] = 'Course id';
+$string['name'] = 'Name';
+$string['completed'] = 'Completed';
+$string['priority'] = 'Priority';
+$string['timecreated'] = 'Creation time';
+$string['timemodified'] = 'Modification time';

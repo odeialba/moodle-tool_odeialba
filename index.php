@@ -47,6 +47,10 @@ $userstable->head = [
     'Username',
 ];
 
+$mytable = new \tool_odeialba\tool_odeialba_table();
+
+// var_dump($mytable->columns);die;
+
 foreach ($allusers as $user) {
     $oneuser = [$user->id, $user->username];
     $userstable->data[] = $oneuser;
