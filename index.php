@@ -28,6 +28,9 @@ $courseid = required_param('id', PARAM_INT);
 
 require_login($courseid);
 
+$context = context_course::instance($courseid);
+require_capability('tool/odeialba:view', $context);
+
 $url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheading', 'tool_odeialba');

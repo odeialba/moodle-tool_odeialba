@@ -15,27 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * English translations for my first plugin
+ * Access file to control roles and permissions
  *
  * @package   tool_odeialba
  * @copyright 2021, Odei Alba <odeialba@odeialba.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'My first Moodle plugin';
-$string['pluginheading'] = 'This is the heading';
-$string['helloworld'] = 'Hello World!';
-$string['currentcourseid'] = 'Current course ID is {$a}';
-$string['totalusers'] = 'There are {$a} users in this moodle';
-$string['currentcoursename'] = 'Current course name is {$a}';
+defined('MOODLE_INTERNAL') || die();
 
-$string['id'] = 'ID';
-$string['courseid'] = 'Course id';
-$string['name'] = 'Name';
-$string['completed'] = 'Completed';
-$string['priority'] = 'Priority';
-$string['timecreated'] = 'Creation time';
-$string['timemodified'] = 'Modification time';
-
-$string['odeialba:view'] = 'View my plugin';
-$string['odeialba:edit'] = 'Edit my plugin';
+$capabilities = [
+    'tool/odeialba:view' => [
+            'captype' => 'read',
+            'contextlevel' => CONTEXT_COURSE,
+            'archetypes' => [
+                    'student' => CAP_ALLOW,
+                    'teacher' => CAP_ALLOW,
+                    'editingteacher' => CAP_ALLOW,
+            ],
+    ],
+    'tool/odeialba:edit' => [
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_COURSE,
+            'archetypes' => [
+                    'teacher' => CAP_ALLOW,
+                    'editingteacher' => CAP_ALLOW,
+            ],
+    ],
+];

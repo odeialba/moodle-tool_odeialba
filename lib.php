@@ -32,6 +32,10 @@
  * @throws moodle_exception
  */
 function tool_odeialba_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context) {
+    if ($context->contextlevel === CONTEXT_COURSE && ! has_capability('tool/odeialba:view', $context)) {
+        return;
+    }
+
     $pluginname = get_string('pluginname', 'tool_odeialba');
     $url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $course->id]);
     $icon = new pix_icon('icon', '', 'tool_odeialba');
