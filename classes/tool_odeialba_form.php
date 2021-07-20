@@ -48,8 +48,10 @@ class tool_odeialba_form extends \moodleform {
         $mform->setType('name', PARAM_NOTAGS);
         $mform->addElement('hidden', 'courseid', $COURSE->id);
         $mform->setType('courseid', PARAM_NOTAGS);
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_NOTAGS);
 
-        $this->add_action_buttons(true, get_string('add'));
+        $this->add_action_buttons(true, get_string('save'));
     }
 
     /**
@@ -67,7 +69,7 @@ class tool_odeialba_form extends \moodleform {
         $errors = parent::validation($data, $files);
 
         $data = (object)$data;
-        if ($DB->record_exists('tool_odeialba', ['courseid' => $data->courseid, 'name' => $data->name])) {
+        if ($data->id === 0 && $DB->record_exists('tool_odeialba', ['courseid' => $data->courseid, 'name' => $data->name])) {
             $errors[] = "existingnameerror";
         }
 

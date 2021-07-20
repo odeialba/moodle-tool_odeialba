@@ -24,7 +24,15 @@
 
 require_once(__DIR__ . '/../../../config.php');
 
-$courseid = required_param('courseid', PARAM_INT);
+$id = optional_param('id', 0, PARAM_INT);
+$courseid = $record = null;
+
+if ($id === 0) {
+    $courseid = required_param('courseid', PARAM_INT);
+} else {
+    $record = $DB->get_record('tool_odeialba', ['id' => $id], '*', MUST_EXIST);
+    $courseid = $record->courseid;
+}
 
 require_login($courseid);
 
@@ -45,14 +53,28 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
 
 $myform = new \tool_odeialba\tool_odeialba_form();
+
+if ($record !== null) {
+    $myform->set_data($record);
+}
+
 $formdata = $myform->get_data();
 if ($formdata) {
-    $DB->insert_record('tool_odeialba', [
-            'courseid' => $formdata->courseid,
-            'name' => $formdata->name,
-            'completed' => $formdata->completed ?? 0,
-            'timecreated' => time(),
-    ]);
+    if ($id === 0) {
+        $DB->insert_record('tool_odeialba', [
+                'courseid' => $formdata->courseid,
+                'name' => $formdata->name,
+                'completed' => $formdata->completed ?? 0,
+                'timecreated' => time(),
+        ]);
+    } else {
+        $DB->update_record('tool_odeialba', (object) [
+                'id' => $formdata->id,
+                'name' => $formdata->name,
+                'completed' => $formdata->completed ?? 0,
+                'timemodified' => time(),
+        ]);
+    }
 } else {
     if ($myform->is_submitted()) {
         $errors = $myform->validation((array) $myform->get_submitted_data(), []);

@@ -54,6 +54,11 @@ class tool_odeialba_table extends \table_sql {
                 'timecreated' => get_string('timecreated', 'tool_odeialba'),
                 'timemodified' => get_string('timemodified', 'tool_odeialba'),
         ];
+
+        if (has_capability('tool/odeialba:edit', $this->get_context())) {
+            $columns['actions'] = get_string('actions');
+        }
+
         $this->define_columns(array_keys($columns));
         $this->define_headers(array_values($columns));
         $this->define_baseurl($baseurl);
@@ -99,6 +104,17 @@ class tool_odeialba_table extends \table_sql {
      */
     public function col_timemodified(\stdClass $row): string {
         return $row->timemodified !== null ? userdate($row->timemodified) : '';
+    }
+
+    /**
+     * Function to get value of column actions
+     *
+     * @param \stdClass $row
+     * @return string
+     */
+    public function col_actions(\stdClass $row): string {
+        $editurl = new \moodle_url('/admin/tool/odeialba/edit.php', ['id' => $row->id]);
+        return \html_writer::link($editurl, get_string('edit'));
     }
 
     /**
