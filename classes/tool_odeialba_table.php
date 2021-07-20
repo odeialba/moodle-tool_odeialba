@@ -132,4 +132,15 @@ class tool_odeialba_table extends \table_sql {
         $this->set_sql(implode(', ', $columns), self::TABLENAME, 'id = ?', [$id]);
         $this->create_and_set_count_sql("id = ?", [$id]);
     }
+
+    /**
+     * Function to get value using id
+     *
+     * @param int $id
+     * @param array|string[] $columns
+     */
+    public function get_by_courseid(int $id, array $columns = ['*']): void {
+        $this->set_sql(implode(', ', $columns), self::TABLENAME, 'courseid = ?', [$id]);
+        $this->create_and_set_count_sql("courseid = ?", [$id]);
+    }
 }

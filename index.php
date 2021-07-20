@@ -38,8 +38,8 @@ $heading = get_string('pluginheading', 'tool_odeialba');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('report');
-$PAGE->set_heading($heading);
-$PAGE->set_title($title);
+$PAGE->set_heading($title);
+$PAGE->set_title($heading);
 
 $coutusers = $DB->count_records_sql("SELECT COUNT(id) FROM {user}");
 $currentcourse = $DB->get_record_sql("SELECT * FROM {course} WHERE id = ?", [$courseid]);
@@ -56,7 +56,12 @@ foreach ($allusers as $user) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading($title);
+echo $OUTPUT->heading($heading);
+
+if (has_capability('tool/odeialba:edit', $context)) {
+    $editurl = new moodle_url('/admin/tool/odeialba/edit.php', ['courseid' => $courseid]);
+    echo html_writer::link($editurl, get_string('newrow', 'tool_odeialba'));
+}
 
 echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
 echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
@@ -64,7 +69,7 @@ echo html_writer::table($userstable);
 echo html_writer::div(get_string('currentcoursename', 'tool_odeialba', $currentcourse->fullname));
 
 $mytable = new \tool_odeialba\tool_odeialba_table($url);
-$mytable->get_by_id($courseid);
+$mytable->get_by_courseid($courseid);
 $mytable->out(100, false);
 
 echo $OUTPUT->footer();
