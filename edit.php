@@ -75,6 +75,8 @@ if ($formdata) {
                 'timemodified' => time(),
         ]);
     }
+    $indexurl = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
+    redirect($indexurl);
 } else {
     if ($myform->is_submitted()) {
         $errors = $myform->validation((array) $myform->get_submitted_data(), []);

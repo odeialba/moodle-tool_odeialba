@@ -43,3 +43,5 @@ $string['odeialba:edit'] = 'Edit my plugin';
 $string['newrow'] = 'Add a new row';
 $string['pluginheadingform'] = 'Add new row';
 $string['existingnameerror'] = 'ERROR: Given name already exists';
+
+$string['editentrytitle'] = 'Edit entry {$a}';

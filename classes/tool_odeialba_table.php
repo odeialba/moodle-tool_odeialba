@@ -44,6 +44,7 @@ class tool_odeialba_table extends \table_sql {
      */
     public function __construct(string $baseurl) {
         parent::__construct('tool_odeialba');
+        global $COURSE;
 
         $columns = [
                 'id' => get_string('id', 'tool_odeialba'),
@@ -55,7 +56,7 @@ class tool_odeialba_table extends \table_sql {
                 'timemodified' => get_string('timemodified', 'tool_odeialba'),
         ];
 
-        if (has_capability('tool/odeialba:edit', $this->get_context())) {
+        if (has_capability('tool/odeialba:edit', \context_course::instance($COURSE->id))) {
             $columns['actions'] = get_string('actions');
         }
 
@@ -71,7 +72,7 @@ class tool_odeialba_table extends \table_sql {
      * @param \stdClass $row
      * @return string
      */
-    public function col_name(\stdClass $row): string {
+    protected function col_name(\stdClass $row): string {
         return format_string($row->name);
     }
 
@@ -82,7 +83,7 @@ class tool_odeialba_table extends \table_sql {
      * @return string
      * @throws \coding_exception
      */
-    public function col_completed(\stdClass $row): string {
+    protected function col_completed(\stdClass $row): string {
         return $row->completed ? get_string('yes') : get_string('no');
     }
 
@@ -92,7 +93,7 @@ class tool_odeialba_table extends \table_sql {
      * @param \stdClass $row
      * @return string
      */
-    public function col_timecreated(\stdClass $row): string {
+    protected function col_timecreated(\stdClass $row): string {
         return userdate($row->timecreated);
     }
 
@@ -102,7 +103,7 @@ class tool_odeialba_table extends \table_sql {
      * @param \stdClass $row
      * @return string
      */
-    public function col_timemodified(\stdClass $row): string {
+    protected function col_timemodified(\stdClass $row): string {
         return $row->timemodified !== null ? userdate($row->timemodified) : '';
     }
 
@@ -112,9 +113,21 @@ class tool_odeialba_table extends \table_sql {
      * @param \stdClass $row
      * @return string
      */
-    public function col_actions(\stdClass $row): string {
+    protected function col_actions(\stdClass $row): string {
         $editurl = new \moodle_url('/admin/tool/odeialba/edit.php', ['id' => $row->id]);
-        return \html_writer::link($editurl, get_string('edit'));
+        $deleteurl = new \moodle_url('/admin/tool/odeialba/delete.php', ['id' => $row->id, 'sesskey' => sesskey()]);
+
+        return \html_writer::div(
+                \html_writer::link($editurl, get_string('edit'), [
+                        'title' => get_string(
+                                'editentrytitle',
+                                'tool_odeialba',
+                                format_string($row->name)
+                        )
+                ])
+                . ' '
+                . \html_writer::link($deleteurl, get_string('delete'))
+        );
     }
 
     /**
