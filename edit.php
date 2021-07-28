@@ -49,44 +49,48 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_heading($title);
 $PAGE->set_title($heading);
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading($heading);
-
 $myform = new \tool_odeialba\tool_odeialba_form();
 
 if ($record !== null) {
     $myform->set_data($record);
 }
 
-$formdata = $myform->get_data();
-if ($formdata) {
-    if ($id === 0) {
-        $DB->insert_record('tool_odeialba', [
-                'courseid' => $formdata->courseid,
-                'name' => $formdata->name,
-                'completed' => $formdata->completed ?? 0,
-                'timecreated' => time(),
-        ]);
-    } else {
-        $DB->update_record('tool_odeialba', (object) [
-                'id' => $formdata->id,
-                'name' => $formdata->name,
-                'completed' => $formdata->completed ?? 0,
-                'timemodified' => time(),
-        ]);
-    }
-    $indexurl = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
-    redirect($indexurl);
-} else {
-    if ($myform->is_submitted()) {
-        $errors = $myform->validation((array) $myform->get_submitted_data(), []);
-        foreach ($errors as $error) {
-            echo html_writer::div(get_string($error, 'tool_odeialba'));
-        }
-    }
-
-    $myform->set_data($myform);
-    $myform->display();
+$errors = [];
+if ($myform->is_submitted()) {
+    $errors = $myform->validation((array) $myform->get_submitted_data(), []);
 }
+
+if (count($errors) === 0) {
+    $formdata = $myform->get_data();
+    if ($formdata) {
+        if ($id === 0) {
+            $DB->insert_record('tool_odeialba', [
+                    'courseid' => $formdata->courseid,
+                    'name' => $formdata->name,
+                    'completed' => $formdata->completed ?? 0,
+                    'timecreated' => time(),
+            ]);
+        } else {
+            $DB->update_record('tool_odeialba', (object) [
+                    'id' => $formdata->id,
+                    'name' => $formdata->name,
+                    'completed' => $formdata->completed ?? 0,
+                    'timemodified' => time(),
+            ]);
+        }
+        $indexurl = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
+        redirect($indexurl);
+    }
+}
+
+echo $OUTPUT->header();
+echo $OUTPUT->heading($heading);
+
+foreach ($errors as $error) {
+    echo html_writer::div(get_string($error, 'tool_odeialba'));
+}
+
+$myform->set_data($myform);
+$myform->display();
 
 echo $OUTPUT->footer();

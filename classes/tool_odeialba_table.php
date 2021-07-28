@@ -64,6 +64,7 @@ class tool_odeialba_table extends \table_sql {
         $this->define_headers(array_values($columns));
         $this->define_baseurl($baseurl);
         $this->sortable(true, 'id', SORT_ASC);
+        $this->set_attribute('id', 'tool_odeialba_table');
     }
 
     /**

@@ -69,7 +69,7 @@ class tool_odeialba_form extends \moodleform {
         $errors = parent::validation($data, $files);
 
         $data = (object)$data;
-        if ($data->id === 0 && $DB->record_exists('tool_odeialba', ['courseid' => $data->courseid, 'name' => $data->name])) {
+        if ((int) $data->id === 0 && $DB->record_exists('tool_odeialba', ['courseid' => $data->courseid, 'name' => $data->name])) {
             $errors[] = "existingnameerror";
         }
 
