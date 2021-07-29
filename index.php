@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_odeialba\tool_odeialba_manager;
+
 require_once(__DIR__ . '/../../../config.php');
 
 $courseid = required_param('id', PARAM_INT);
@@ -31,7 +33,7 @@ require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('tool/odeialba:view', $context);
 
-$url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
+$url = tool_odeialba_manager::get_index_url_by_courseid($courseid);
 
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheading', 'tool_odeialba');
@@ -60,8 +62,8 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
 
 if (has_capability('tool/odeialba:edit', $context)) {
-    $editurl = new moodle_url('/admin/tool/odeialba/edit.php', ['courseid' => $courseid]);
-    echo html_writer::link($editurl, get_string('newrow', 'tool_odeialba'));
+    $inserturl = tool_odeialba_manager::get_insert_url_by_courseid($courseid);
+    echo html_writer::link($inserturl, get_string('newrow', 'tool_odeialba'));
 }
 
 echo html_writer::div(get_string('helloworld', 'tool_odeialba'));

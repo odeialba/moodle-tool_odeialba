@@ -115,8 +115,8 @@ class tool_odeialba_table extends \table_sql {
      * @return string
      */
     protected function col_actions(\stdClass $row): string {
-        $editurl = new \moodle_url('/admin/tool/odeialba/edit.php', ['id' => $row->id]);
-        $deleteurl = new \moodle_url('/admin/tool/odeialba/delete.php', ['id' => $row->id, 'sesskey' => sesskey()]);
+        $editurl = tool_odeialba_manager::get_edit_url_by_id((int) $row->id);
+        $deleteurl = tool_odeialba_manager::get_delete_url_by_id((int) $row->id);
 
         return \html_writer::div(
                 \html_writer::link($editurl, get_string('edit'), [

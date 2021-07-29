@@ -22,12 +22,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_odeialba\tool_odeialba_manager;
+
 require_once(__DIR__ . '/../../../config.php');
 
 require_sesskey();
 $id = required_param('id', PARAM_INT);
 
-$record = $DB->get_record('tool_odeialba', ['id' => $id], '*', MUST_EXIST);
+$record = tool_odeialba_manager::get_record_by_id($id);
 $courseid = $record->courseid;
 
 require_login($courseid);
@@ -35,7 +37,7 @@ require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('tool/odeialba:edit', $context);
 
-$DB->delete_records('tool_odeialba', ['id' => $id]);
+tool_odeialba_manager::delete_record_by_id($id);
 
-$url = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
+$url = tool_odeialba_manager::get_index_url_by_courseid($courseid);
 redirect($url);

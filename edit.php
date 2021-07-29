@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_odeialba\tool_odeialba_form;
+use tool_odeialba\tool_odeialba_manager;
+
 require_once(__DIR__ . '/../../../config.php');
 
 $id = optional_param('id', 0, PARAM_INT);
@@ -29,9 +32,11 @@ $courseid = $record = null;
 
 if ($id === 0) {
     $courseid = required_param('courseid', PARAM_INT);
+    $url = tool_odeialba_manager::get_insert_url_by_courseid($courseid);
 } else {
-    $record = $DB->get_record('tool_odeialba', ['id' => $id], '*', MUST_EXIST);
+    $record = tool_odeialba_manager::get_record_by_id($id);
     $courseid = $record->courseid;
+    $url = tool_odeialba_manager::get_edit_url_by_id($id);
 }
 
 require_login($courseid);
@@ -39,7 +44,6 @@ require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('tool/odeialba:edit', $context);
 
-$url = new moodle_url('/admin/tool/odeialba/edit.php', ['courseid' => $courseid]);
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheadingform', 'tool_odeialba');
 
@@ -49,7 +53,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_heading($title);
 $PAGE->set_title($heading);
 
-$myform = new \tool_odeialba\tool_odeialba_form();
+$myform = new tool_odeialba_form();
 
 if ($record !== null) {
     $myform->set_data($record);
@@ -64,21 +68,20 @@ if (count($errors) === 0) {
     $formdata = $myform->get_data();
     if ($formdata) {
         if ($id === 0) {
-            $DB->insert_record('tool_odeialba', [
-                    'courseid' => $formdata->courseid,
-                    'name' => $formdata->name,
-                    'completed' => $formdata->completed ?? 0,
-                    'timecreated' => time(),
-            ]);
+            tool_odeialba_manager::insert_record(
+                    (int) $formdata->courseid,
+                    $formdata->name,
+                    isset($formdata->completed) ? (int) $formdata->completed : 0
+            );
         } else {
-            $DB->update_record('tool_odeialba', (object) [
-                    'id' => $formdata->id,
-                    'name' => $formdata->name,
-                    'completed' => $formdata->completed ?? 0,
-                    'timemodified' => time(),
-            ]);
+            tool_odeialba_manager::update_record(
+                    (int) $formdata->id,
+                    $formdata->name,
+                    isset($formdata->completed) ? (int) $formdata->completed : 0
+            );
         }
-        $indexurl = new moodle_url('/admin/tool/odeialba/index.php', ['id' => $courseid]);
+
+        $indexurl = tool_odeialba_manager::get_index_url_by_courseid($courseid);
         redirect($indexurl);
     }
 }
