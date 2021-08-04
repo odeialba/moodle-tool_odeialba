@@ -30,10 +30,11 @@ Feature: Tests if the record is correctly inserted.
     Then I should see "Nothing to display"
     And I follow "Add a new row"
     And I set the following fields to these values:
-      | Name      | Test1 |
-      | Completed | 1     |
+      | Name        | Test1            |
+      | Completed   | 1                |
+      | Description | Test description |
     And I press "Save"
     And I wait to be redirected
     Then the following should exist in the "tool_odeialba_table" table:
-      | Name  | Completed |
-      | Test1 | Yes       |
+      | Name  | Completed | Description      |
+      | Test1 | Yes       | Test description |

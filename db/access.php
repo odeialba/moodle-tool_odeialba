@@ -35,6 +35,7 @@ $capabilities = [
             ],
     ],
     'tool/odeialba:edit' => [
+            'riskbitmask' => RISK_SPAM | RISK_XSS,
             'captype' => 'write',
             'contextlevel' => CONTEXT_COURSE,
             'archetypes' => [

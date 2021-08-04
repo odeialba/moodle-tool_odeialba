@@ -40,16 +40,25 @@ class tool_odeialba_form extends \moodleform {
      * @throws \coding_exception
      */
     public function definition() {
-        global $COURSE;
+        global $PAGE;
+        $context = \context_course::instance($PAGE->course->id);
         $mform = $this->_form;
 
         $mform->addElement('text', 'name', get_string('name', 'tool_odeialba'));
         $mform->addElement('checkbox', 'completed', get_string('completed', 'tool_odeialba'));
         $mform->setType('name', PARAM_NOTAGS);
-        $mform->addElement('hidden', 'courseid', $COURSE->id);
+        $mform->addElement('hidden', 'courseid', $PAGE->course->id);
         $mform->setType('courseid', PARAM_NOTAGS);
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_NOTAGS);
+        $descriptionoptions = [
+                'trusttext' => true,
+                'subdirs' => true,
+                'maxfiles' => -1,
+                'maxbytes' => 0,
+                'context' => $context
+        ];
+        $mform->addElement('editor', 'description_editor', get_string('description'), null, $descriptionoptions);
 
         $this->add_action_buttons(true, get_string('save'));
     }

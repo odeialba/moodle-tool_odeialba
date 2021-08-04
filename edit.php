@@ -56,6 +56,23 @@ $PAGE->set_title($heading);
 $myform = new tool_odeialba_form();
 
 if ($record !== null) {
+    $descriptionoptions = [
+            'trusttext' => true,
+            'subdirs' => true,
+            'maxfiles' => -1,
+            'maxbytes' => 0,
+            'context' => $context
+    ];
+    $record = file_prepare_standard_editor(
+            $record,
+            'description',
+            $descriptionoptions,
+            $context,
+            'tool_odeialba',
+            'file',
+            $record->id
+    );
+
     $myform->set_data($record);
 }
 
@@ -67,19 +84,7 @@ if ($myform->is_submitted()) {
 if (count($errors) === 0) {
     $formdata = $myform->get_data();
     if ($formdata) {
-        if ($id === 0) {
-            tool_odeialba_manager::insert_record(
-                    (int) $formdata->courseid,
-                    $formdata->name,
-                    isset($formdata->completed) ? (int) $formdata->completed : 0
-            );
-        } else {
-            tool_odeialba_manager::update_record(
-                    (int) $formdata->id,
-                    $formdata->name,
-                    isset($formdata->completed) ? (int) $formdata->completed : 0
-            );
-        }
+        tool_odeialba_manager::save_record($id, $formdata, $context);
 
         $indexurl = tool_odeialba_manager::get_index_url_by_courseid($courseid);
         redirect($indexurl);

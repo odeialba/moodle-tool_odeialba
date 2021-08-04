@@ -24,6 +24,8 @@
 
 namespace tool_odeialba;
 
+use context_course;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/tablelib.php');
@@ -54,9 +56,10 @@ class tool_odeialba_table extends \table_sql {
                 'priority' => get_string('priority', 'tool_odeialba'),
                 'timecreated' => get_string('timecreated', 'tool_odeialba'),
                 'timemodified' => get_string('timemodified', 'tool_odeialba'),
+                'description' => get_string('description', 'tool_odeialba'),
         ];
 
-        if (has_capability('tool/odeialba:edit', \context_course::instance($COURSE->id))) {
+        if (has_capability('tool/odeialba:edit', context_course::instance($COURSE->id))) {
             $columns['actions'] = get_string('actions');
         }
 
@@ -106,6 +109,30 @@ class tool_odeialba_table extends \table_sql {
      */
     protected function col_timemodified(\stdClass $row): string {
         return $row->timemodified !== null ? userdate($row->timemodified) : '';
+    }
+
+    /**
+     * Function to get value of column description
+     *
+     * @param \stdClass $row
+     * @return string
+     */
+    protected function col_description(\stdClass $row): string {
+        $context = context_course::instance($row->courseid);
+        $options = [
+                'trusttext' => true,
+                'noclean' => true,
+        ];
+        $description = file_rewrite_pluginfile_urls(
+                $row->description,
+                'pluginfile.php',
+                $context->id,
+                'tool_odeialba',
+                'file',
+                $row->id
+        );
+
+        return format_text($description, $row->descriptionformat, $options);
     }
 
     /**

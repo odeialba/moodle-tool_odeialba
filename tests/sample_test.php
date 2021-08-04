@@ -32,29 +32,50 @@ class tool_odeialba_sample_testcase extends advanced_testcase {
     public function test_insert() {
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        $recordtoinsert = (object) [
+                'courseid' => $course->id,
+                'name' => 'Test name',
+                'completed' => '1',
+        ];
 
-        $id = tool_odeialba_manager::insert_record($course->id, 'Test name', 1);
+        $id = tool_odeialba_manager::insert_record($recordtoinsert, $context);
         $record = tool_odeialba_manager::get_record_by_id($id);
 
-        $this->assertEquals($record->name, 'Test name');
+        $this->assertEquals('Test name', $record->name);
     }
 
     public function test_update() {
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        $recordtouse = (object) [
+                'courseid' => $course->id,
+                'name' => 'Test name',
+                'completed' => '1',
+        ];
 
-        $id = tool_odeialba_manager::insert_record($course->id, 'Test name', 1);
-        tool_odeialba_manager::update_record($id, 'Test name new', 1);
+        $id = tool_odeialba_manager::insert_record($recordtouse, $context);
+
+        $recordtouse->id = $id;
+        $recordtouse->name = 'Test name new';
+        tool_odeialba_manager::update_record($id, $recordtouse, $context);
         $record = tool_odeialba_manager::get_record_by_id($id);
 
-        $this->assertEquals($record->name, 'Test name new');
+        $this->assertEquals('Test name new', $record->name);
     }
 
     public function test_delete() {
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        $recordtouse = (object) [
+                'courseid' => $course->id,
+                'name' => 'Test name',
+                'completed' => '1',
+        ];
 
-        $id = tool_odeialba_manager::insert_record($course->id, 'Test name', 1);
+        $id = tool_odeialba_manager::insert_record($recordtouse, $context);
         tool_odeialba_manager::delete_record_by_id($id);
         $record = tool_odeialba_manager::get_record_by_id($id);
 
@@ -62,18 +83,61 @@ class tool_odeialba_sample_testcase extends advanced_testcase {
     }
 
     public function test_all() {
+
         $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        $recordtouse = (object) [
+                'courseid' => $course->id,
+                'name' => 'Test name',
+                'completed' => '1',
+        ];
 
-        $id = tool_odeialba_manager::insert_record($course->id, 'Test name', 1);
+        $id = tool_odeialba_manager::insert_record($recordtouse, $context);
         $record = tool_odeialba_manager::get_record_by_id($id);
 
-        $this->assertEquals($record->name, 'Test name');
+        $this->assertEquals('Test name', $record->name);
 
-        tool_odeialba_manager::update_record($id, 'Test name new', 1);
+        $recordtouse->id = $id;
+        $recordtouse->name = 'Test name new';
+        tool_odeialba_manager::update_record($id, $recordtouse, $context);
         $recordnew = tool_odeialba_manager::get_record_by_id($id);
 
-        $this->assertEquals($recordnew->name, 'Test name new');
+        $this->assertEquals('Test name new', $recordnew->name);
+
+        tool_odeialba_manager::delete_record_by_id($id);
+        $recorddeleted = tool_odeialba_manager::get_record_by_id($id);
+
+        $this->assertNull($recorddeleted);
+    }
+
+    public function test_new_universal_function() {
+
+        $this->resetAfterTest(true);
+        $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        $recordtouse = (object) [
+                'courseid' => $course->id,
+                'name' => 'Test name',
+                'completed' => '1',
+                'description_editor' => [
+                        'text' => 'This is description',
+                        'format' => '1',
+                ]
+        ];
+
+        $id = tool_odeialba_manager::save_record(0, $recordtouse, $context);
+        $record = tool_odeialba_manager::get_record_by_id($id);
+
+        $this->assertEquals('Test name', $record->name);
+        $this->assertEquals('This is description', $record->description);
+
+        $recordtouse->id = $id;
+        $recordtouse->name = 'Test name new';
+        tool_odeialba_manager::save_record($id, $recordtouse, $context);
+        $recordnew = tool_odeialba_manager::get_record_by_id($id);
+
+        $this->assertEquals('Test name new', $recordnew->name);
 
         tool_odeialba_manager::delete_record_by_id($id);
         $recorddeleted = tool_odeialba_manager::get_record_by_id($id);

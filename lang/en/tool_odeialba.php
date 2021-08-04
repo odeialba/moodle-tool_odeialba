@@ -36,6 +36,7 @@ $string['completed'] = 'Completed';
 $string['priority'] = 'Priority';
 $string['timecreated'] = 'Creation time';
 $string['timemodified'] = 'Modification time';
+$string['description'] = 'Description';
 
 $string['odeialba:view'] = 'View my plugin';
 $string['odeialba:edit'] = 'Edit my plugin';

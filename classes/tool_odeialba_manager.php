@@ -24,6 +24,7 @@
 
 namespace tool_odeialba;
 
+use context_course;
 use moodle_url;
 use stdClass;
 
@@ -36,39 +37,115 @@ defined('MOODLE_INTERNAL') || die();
  */
 class tool_odeialba_manager {
     /**
-     * Insert new record with given data
+     * Insert or update record with given data
      *
-     * @param int $courseid
-     * @param string $name
-     * @param int $completed
+     * @param int $id
+     * @param stdClass $formdata
+     * @param context_course $context
      * @return int
      */
-    public static function insert_record(int $courseid, string $name, int $completed): int {
+    public static function save_record(int $id, stdClass $formdata, context_course $context): int {
+        if ($id === 0) {
+            return self::insert_record(
+                    $formdata,
+                    $context
+            );
+        }
+
+        self::update_record(
+                $id,
+                $formdata,
+                $context
+        );
+
+        return $id;
+    }
+
+    /**
+     * Insert new record with given data
+     *
+     * @param stdClass $formdata
+     * @param context_course $context
+     * @return int
+     */
+    public static function insert_record(stdClass $formdata, context_course $context): int {
         global $DB;
-        return $DB->insert_record('tool_odeialba', [
-                'courseid' => $courseid,
-                'name' => $name,
-                'completed' => $completed,
+
+        $formdata->id = $DB->insert_record('tool_odeialba', [
+                'courseid' => (int) $formdata->courseid,
+                'name' => $formdata->name,
+                'completed' => isset($formdata->completed) ? (int) $formdata->completed : 0,
                 'timecreated' => time(),
         ]);
+
+        self::update_description($formdata->id, $formdata, $context);
+
+        return $formdata->id;
     }
 
     /**
      * Update record with given id
      *
      * @param int $id
-     * @param string $name
-     * @param int $completed
+     * @param stdClass $formdata
+     * @param context_course $context
      * @return bool
      */
-    public static function update_record(int $id, string $name, int $completed): bool {
+    public static function update_record(int $id, stdClass $formdata, context_course $context): bool {
         global $DB;
-        return $DB->update_record('tool_odeialba', (object) [
+
+        self::update_description($id, $formdata, $context);
+
+        $params = [
                 'id' => $id,
-                'name' => $name,
-                'completed' => $completed,
+                'name' => $formdata->name,
+                'completed' => isset($formdata->completed) ? (int) $formdata->completed : 0,
                 'timemodified' => time(),
-        ]);
+        ];
+
+        return $DB->update_record('tool_odeialba', (object) $params);
+    }
+
+    /**
+     * Update record with given id
+     *
+     * @param int $id
+     * @param stdClass $formdata
+     * @param context_course $context
+     * @return bool
+     */
+    public static function update_description(int $id, stdClass $formdata, context_course $context): bool {
+        if (! isset($formdata->description_editor)) {
+            return false;
+        }
+
+        global $DB;
+
+        $descriptionoptions = [
+                'trusttext' => true,
+                'subdirs' => true,
+                'maxfiles' => -1,
+                'maxbytes' => 0,
+                'context' => $context
+        ];
+
+        $formdata = file_postupdate_standard_editor(
+                $formdata,
+                'description',
+                $descriptionoptions,
+                $context,
+                'tool_odeialba',
+                'file',
+                $id
+        );
+
+        $params = [
+                'id' => $id,
+                'description' => $formdata->description,
+                'descriptionformat' => (int) $formdata->descriptionformat,
+        ];
+
+        return $DB->update_record('tool_odeialba', (object) $params);
     }
 
     /**
