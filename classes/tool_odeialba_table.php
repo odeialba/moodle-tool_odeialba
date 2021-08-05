@@ -41,12 +41,10 @@ class tool_odeialba_table extends \table_sql {
 
     /**
      * tool_odeialba_table constructor.
-     *
-     * @param string $baseurl
      */
-    public function __construct(string $baseurl) {
+    public function __construct() {
         parent::__construct('tool_odeialba');
-        global $COURSE;
+        global $PAGE;
 
         $columns = [
                 'id' => get_string('id', 'tool_odeialba'),
@@ -59,13 +57,13 @@ class tool_odeialba_table extends \table_sql {
                 'description' => get_string('description', 'tool_odeialba'),
         ];
 
-        if (has_capability('tool/odeialba:edit', context_course::instance($COURSE->id))) {
+        if (has_capability('tool/odeialba:edit', context_course::instance($PAGE->course->id))) {
             $columns['actions'] = get_string('actions');
         }
 
         $this->define_columns(array_keys($columns));
         $this->define_headers(array_values($columns));
-        $this->define_baseurl($baseurl);
+        $this->define_baseurl($PAGE->url);
         $this->sortable(true, 'id', SORT_ASC);
         $this->set_attribute('id', 'tool_odeialba_table');
     }

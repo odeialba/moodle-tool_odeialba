@@ -41,6 +41,7 @@ if ($id === 0) {
 
 require_login($courseid);
 
+$indexurl = tool_odeialba_manager::get_index_url_by_courseid($courseid);
 $context = context_course::instance($courseid);
 require_capability('tool/odeialba:edit', $context);
 
@@ -77,7 +78,9 @@ if ($record !== null) {
 }
 
 $errors = [];
-if ($myform->is_submitted()) {
+if ($myform->is_cancelled()) {
+    redirect($indexurl);
+} else if ($myform->is_submitted()) {
     $errors = $myform->validation((array) $myform->get_submitted_data(), []);
 }
 
@@ -86,7 +89,6 @@ if (count($errors) === 0) {
     if ($formdata) {
         tool_odeialba_manager::save_record($id, $formdata, $context);
 
-        $indexurl = tool_odeialba_manager::get_index_url_by_courseid($courseid);
         redirect($indexurl);
     }
 }

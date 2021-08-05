@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_odeialba\output\records_table;
 use tool_odeialba\tool_odeialba_manager;
 
 require_once(__DIR__ . '/../../../config.php');
@@ -34,7 +35,6 @@ $context = context_course::instance($courseid);
 require_capability('tool/odeialba:view', $context);
 
 $url = tool_odeialba_manager::get_index_url_by_courseid($courseid);
-
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheading', 'tool_odeialba');
 
@@ -44,35 +44,8 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_heading($title);
 $PAGE->set_title($heading);
 
-$coutusers = $DB->count_records_sql("SELECT COUNT(id) FROM {user}");
-$currentcourse = $DB->get_record_sql("SELECT * FROM {course} WHERE id = ?", [$courseid]);
-$allusers = $DB->get_records('user');
-$userstable = new html_table();
-$userstable->head = [
-    'ID',
-    'Username',
-];
-
-foreach ($allusers as $user) {
-    $oneuser = [$user->id, $user->username];
-    $userstable->data[] = $oneuser;
-}
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading($heading);
-
-if (has_capability('tool/odeialba:edit', $context)) {
-    $inserturl = tool_odeialba_manager::get_insert_url_by_courseid($courseid);
-    echo html_writer::link($inserturl, get_string('newrow', 'tool_odeialba'));
-}
-
-echo html_writer::div(get_string('helloworld', 'tool_odeialba'));
-echo html_writer::div(get_string('currentcourseid', 'tool_odeialba', $courseid));
-echo html_writer::table($userstable);
-echo html_writer::div(get_string('currentcoursename', 'tool_odeialba', $currentcourse->fullname));
-
-$mytable = new \tool_odeialba\tool_odeialba_table($url);
-$mytable->get_by_courseid($courseid);
-$mytable->out(100, false);
-
-echo $OUTPUT->footer();
+$outputpage = new records_table();
+$output = $PAGE->get_renderer('tool_odeialba');
+echo $output->header();
+echo $output->render($outputpage);
+echo $output->footer();
