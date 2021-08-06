@@ -41,3 +41,9 @@
 {{# addnewlink }}
     {{{ addnewlink }}}
 {{/addnewlink}}
+
+{{#js}}
+    require(['tool_odeialba/confirmation'], function(confirmation) {
+        confirmation.init();
+    });
+{{/js}}
