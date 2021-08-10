@@ -48,7 +48,7 @@ require_capability('tool/odeialba:edit', $context);
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheadingform', 'tool_odeialba');
 
-$PAGE->set_context(context_system::instance());
+$PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('report');
 $PAGE->set_heading($title);

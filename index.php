@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_odeialba\event\record_viewed;
 use tool_odeialba\output\records_table;
 use tool_odeialba\tool_odeialba_manager;
 
@@ -38,14 +39,18 @@ $url = tool_odeialba_manager::get_index_url_by_courseid($courseid);
 $title = get_string('pluginname', 'tool_odeialba');
 $heading = get_string('pluginheading', 'tool_odeialba');
 
-$PAGE->set_context(context_system::instance());
+$PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('report');
 $PAGE->set_heading($title);
 $PAGE->set_title($heading);
+
+$event = record_viewed::create(['context' => $context, 'courseid' => $courseid]);
 
 $outputpage = new records_table();
 $output = $PAGE->get_renderer('tool_odeialba');
 echo $output->header();
 echo $output->render($outputpage);
 echo $output->footer();
+
+$event->trigger();

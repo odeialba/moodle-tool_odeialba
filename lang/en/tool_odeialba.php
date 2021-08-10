@@ -48,3 +48,8 @@ $string['existingnameerror'] = 'ERROR: Given name already exists';
 $string['editentrytitle'] = 'Edit entry {$a}';
 
 $string['confirmdelete'] = 'Are you sure you want to delete?';
+
+$string['event_record_viewed'] = 'Records were viewed';
+$string['event_record_created'] = 'New record was added';
+$string['event_record_updated'] = 'A record was updated';
+$string['event_record_deleted'] = 'A record was deleted';

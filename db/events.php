@@ -15,17 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version control file for my first plugin
+ * tool_odeialba file description here.
  *
- * @package   tool_odeialba
- * @copyright 2021, Odei Alba <odeialba@odeialba.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_odeialba
+ * @copyright  2021 Odei Alba
+ * @author     Odei Alba <odeialba@odeialba.com>
+ * @link       https://www.odeialba.com
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'tool_odeialba';
-$plugin->version = 2021081000;
-$plugin->requires = 2021051700;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.4';
+$observers = [
+    [
+        'eventname'   => 'core\event\course_content_deleted',
+        'callback'    => 'course_content_observer::course_records_delete',
+    ],
+];

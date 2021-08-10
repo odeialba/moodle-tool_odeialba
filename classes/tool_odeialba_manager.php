@@ -27,6 +27,9 @@ namespace tool_odeialba;
 use context_course;
 use moodle_url;
 use stdClass;
+use tool_odeialba\event\record_created;
+use tool_odeialba\event\record_deleted;
+use tool_odeialba\event\record_updated;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -80,6 +83,15 @@ class tool_odeialba_manager {
 
         self::update_description($formdata->id, $formdata, $context);
 
+        $event = record_created::create(
+            [
+                'context' => $context,
+                'courseid' => (int) $formdata->courseid,
+                'objectid' => (int) $formdata->id,
+            ]
+        );
+        $event->trigger();
+
         return $formdata->id;
     }
 
@@ -94,6 +106,7 @@ class tool_odeialba_manager {
     public static function update_record(int $id, stdClass $formdata, context_course $context): bool {
         global $DB;
 
+        $record = self::get_record_by_id($id);
         self::update_description($id, $formdata, $context);
 
         $params = [
@@ -103,7 +116,21 @@ class tool_odeialba_manager {
                 'timemodified' => time(),
         ];
 
-        return $DB->update_record('tool_odeialba', (object) $params);
+        $updated = $DB->update_record('tool_odeialba', (object) $params);
+
+        if ($updated) {
+            $event = record_updated::create(
+                [
+                    'context' => $context,
+                    'courseid' => $record->courseid,
+                    'objectid' => (int) $formdata->id,
+                ]
+            );
+            $event->add_record_snapshot('tool_odeialba', $record);
+            $event->trigger();
+        }
+
+        return $updated;
     }
 
     /**
@@ -160,6 +187,17 @@ class tool_odeialba_manager {
     }
 
     /**
+     * Get records by given course id.
+     *
+     * @param int $courseid
+     * @return array
+     */
+    public static function get_records_by_course_id(int $courseid): array {
+        global $DB;
+        return  $DB->get_records('tool_odeialba', ['courseid' => $courseid]);
+    }
+
+    /**
      * Delete given record
      *
      * @param int $id
@@ -167,7 +205,45 @@ class tool_odeialba_manager {
      */
     public static function delete_record_by_id(int $id): bool {
         global $DB;
-        return $DB->delete_records('tool_odeialba', ['id' => $id]);
+        $record = self::get_record_by_id($id);
+        $deleted = $DB->delete_records('tool_odeialba', ['id' => $id]);
+
+        if ($deleted) {
+            $context = context_course::instance($record->courseid);
+            $event = record_deleted::create(
+                [
+                    'context' => $context,
+                    'courseid' => $record->courseid,
+                ]
+            );
+            $event->add_record_snapshot('tool_odeialba', $record);
+            $event->trigger();
+        }
+
+        return $deleted;
+    }
+
+    /**
+     * Delete record with given course id
+     *
+     * @param int $courseid
+     * @return bool
+     */
+    public static function delete_records_by_course_id(int $courseid): bool {
+        global $DB;
+        $records = self::get_records_by_course_id($courseid);
+        $deleted = $DB->delete_records('tool_odeialba', ['courseid' => $courseid]);
+
+        if ($deleted) {
+            $context = context_course::instance($courseid);
+            $event = record_deleted::create(['context' => $context, 'courseid' => $courseid]);
+            foreach ($records as $record) {
+                $event->add_record_snapshot('tool_odeialba', $record);
+            }
+            $event->trigger();
+        }
+
+        return $deleted;
     }
 
     /**
