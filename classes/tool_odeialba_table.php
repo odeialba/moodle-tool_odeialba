@@ -152,7 +152,11 @@ class tool_odeialba_table extends \table_sql {
                         )
                 ])
                 . ' '
-                . \html_writer::link($deleteurl, get_string('delete'), ['data-action' => 'delete'])
+                . \html_writer::link(
+                        $deleteurl,
+                        get_string('delete'),
+                        ['data-action' => 'delete', 'data-id' => (int) $row->id]
+                )
         );
     }
 
