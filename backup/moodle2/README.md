@@ -87,7 +87,7 @@ $tabledata->set_source_table('tool_odeialba', ['courseid' => backup::VAR_COURSEI
 If the plugin also contains uploaded files, we also want them in the backup. We will add them using `annotate_files` and passing three/four parameters to it:
 1. The component name, which is `{plugintype}_{pluginname}`.
 2. The name of the filearea you defined in the form.
-3. Since it is possible to have multiple file areas in the same element (table), you may end up having multiple calls to the annotate_files() method, one for each filearea to be added to the backup. The third parameter, if it is needed, must be the name of one of the attributes or fields of the $tabledata element (usually, in the vast majority of cases, the 'id' of the element), otherwise we'll use null.
+3. Since it is possible to have multiple file areas in the same element (table), you may end up having multiple calls to the `annotate_files()` method, one for each filearea to be added to the backup. The third parameter, if it is needed, must be the name of one of the attributes or fields of the `$tabledata` element (usually, in the vast majority of cases, the `id` of the element), otherwise we'll use `null`.
 4. The fourth parameter is optional and will default to the context id of the backup, but if you want to specify the context id you do so here.
 ```php
 // set_source_table stuff ...
@@ -155,7 +155,7 @@ protected function define_course_plugin_structure() {
 (So far this file looks very similar to the one that we created for the backup, but now we will start seeing the difference.)
 
 Within this new function we need to prepare and return the array with the `restore_path_element` objects. In our case the array will only contain one element. The constructor of that object needs two parameters:
-1. The name of the thing being restored (we will use `{plugintype}_{pluginname}`). This determines the name of the process_... method called (will be created in the next step).
+1. The name of the thing being restored (we will use `{plugintype}_{pluginname}`). This determines the name of the `process_...` method (will be created in the next step).
 2. The path of the element to restore. The format will be `/{belongsto}/{plugintype}_{pluginname}`.
 
 The content of our function will be this:
