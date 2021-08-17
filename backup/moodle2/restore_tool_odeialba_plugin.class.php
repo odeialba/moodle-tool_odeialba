@@ -50,7 +50,7 @@ class restore_tool_odeialba_plugin extends restore_tool_plugin {
      *
      * @param array|stdClass $data
      */
-    protected function process_tool_odeialba($data) {
+    public function process_tool_odeialba($data) {
         global $DB;
 
         $data = (object) $data;
