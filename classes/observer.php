@@ -24,22 +24,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 use core\event\course_content_deleted;
 use tool_odeialba\tool_odeialba_manager;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Event observer for course content.
  */
-class course_content_observer {
+class tool_odeialba_observer {
 
     /**
      * Triggered when 'course_content_deleted' event is triggered.
      *
      * @param course_content_deleted $event
      */
-    public static function course_records_delete(course_content_deleted $event) {
+    public static function course_content_deleted(course_content_deleted $event) {
         $courseid = (int) $event->courseid;
 
         tool_odeialba_manager::delete_records_by_course_id($courseid);

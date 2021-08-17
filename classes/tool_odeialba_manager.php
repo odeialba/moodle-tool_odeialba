@@ -235,7 +235,7 @@ class tool_odeialba_manager {
         $deleted = $DB->delete_records('tool_odeialba', ['courseid' => $courseid]);
 
         if ($deleted) {
-            $context = context_course::instance($courseid);
+            $context = context_course::instance($courseid, IGNORE_MISSING);
             $event = record_deleted::create(['context' => $context, 'courseid' => $courseid]);
             foreach ($records as $record) {
                 $event->add_record_snapshot('tool_odeialba', $record);

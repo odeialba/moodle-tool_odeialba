@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $observers = [
     [
-        'eventname'   => 'core\event\course_content_deleted',
-        'callback'    => 'course_content_observer::course_records_delete',
+        'eventname'   => '\core\event\course_content_deleted',
+        'callback'    => 'tool_odeialba_observer::course_content_deleted',
     ],
 ];
