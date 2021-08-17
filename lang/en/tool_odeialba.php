@@ -53,3 +53,6 @@ $string['event_record_viewed'] = 'Records were viewed';
 $string['event_record_created'] = 'New record was added';
 $string['event_record_updated'] = 'A record was updated';
 $string['event_record_deleted'] = 'A record was deleted';
+
+$string['cachedef_record'] = 'Cache of individual record';
+$string['cachedef_courserecords'] = 'Cache of records of a course';

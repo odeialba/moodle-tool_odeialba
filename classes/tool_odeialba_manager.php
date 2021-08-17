@@ -24,6 +24,7 @@
 
 namespace tool_odeialba;
 
+use cache;
 use context_course;
 use moodle_url;
 use stdClass;
@@ -107,6 +108,13 @@ class tool_odeialba_manager {
         global $DB;
 
         $record = self::get_record_by_id($id);
+        $courseid = $record->courseid;
+
+        $cache = self::get_record_cache_object();
+        $cache->delete($id);
+        $coursecache = self::get_course_records_cache_object();
+        $coursecache->delete($courseid);
+
         self::update_description($id, $formdata, $context);
 
         $params = [
@@ -148,6 +156,13 @@ class tool_odeialba_manager {
 
         global $DB;
 
+        $record = self::get_record_by_id($id);
+        $courseid = $record->courseid;
+        $cache = self::get_record_cache_object();
+        $cache->delete($id);
+        $coursecache = self::get_course_records_cache_object();
+        $coursecache->delete($courseid);
+
         $descriptionoptions = [
                 'trusttext' => true,
                 'subdirs' => true,
@@ -183,7 +198,15 @@ class tool_odeialba_manager {
      */
     public static function get_record_by_id(int $id): ?stdClass {
         global $DB;
-        return  $DB->get_record('tool_odeialba', ['id' => $id]) ?: null;
+        $cache = self::get_record_cache_object();
+        $record = $cache->get($id);
+
+        if ($record === false) {
+            $record = $DB->get_record('tool_odeialba', ['id' => $id]) ?: null;
+            $cache->set($id, $record);
+        }
+
+        return  $record;
     }
 
     /**
@@ -194,7 +217,15 @@ class tool_odeialba_manager {
      */
     public static function get_records_by_course_id(int $courseid): array {
         global $DB;
-        return  $DB->get_records('tool_odeialba', ['courseid' => $courseid]);
+        $coursecache = self::get_course_records_cache_object();
+        $records = $coursecache->get($courseid);
+
+        if ($records === false) {
+            $records = $DB->get_records('tool_odeialba', ['courseid' => $courseid]);
+            $coursecache->set($courseid, $records);
+        }
+
+        return  $records;
     }
 
     /**
@@ -206,7 +237,13 @@ class tool_odeialba_manager {
     public static function delete_record_by_id(int $id): bool {
         global $DB;
         $record = self::get_record_by_id($id);
+        $courseid = $record->courseid;
         $deleted = $DB->delete_records('tool_odeialba', ['id' => $id]);
+
+        $cache = self::get_record_cache_object();
+        $cache->delete($id);
+        $coursecache = self::get_course_records_cache_object();
+        $coursecache->delete($courseid);
 
         if ($deleted) {
             $context = context_course::instance($record->courseid);
@@ -234,11 +271,16 @@ class tool_odeialba_manager {
         $records = self::get_records_by_course_id($courseid);
         $deleted = $DB->delete_records('tool_odeialba', ['courseid' => $courseid]);
 
+        $coursecache = self::get_course_records_cache_object();
+        $coursecache->delete($courseid);
+
         if ($deleted) {
             $context = context_course::instance($courseid, IGNORE_MISSING);
             $event = record_deleted::create(['context' => $context, 'courseid' => $courseid]);
+            $cache = self::get_record_cache_object();
             foreach ($records as $record) {
                 $event->add_record_snapshot('tool_odeialba', $record);
+                $cache->delete($record->id);
             }
             $event->trigger();
         }
@@ -284,5 +326,23 @@ class tool_odeialba_manager {
      */
     public static function get_delete_url_by_id(int $id): moodle_url {
          return new moodle_url('/admin/tool/odeialba/delete.php', ['id' => $id, 'sesskey' => sesskey()]);
+    }
+
+    /**
+     * Return the cache object for individual record.
+     *
+     * @return cache
+     */
+    private static function get_record_cache_object(): cache {
+        return cache::make('tool_odeialba', 'record');
+    }
+
+    /**
+     * Return the cache object for course records.
+     *
+     * @return cache
+     */
+    private static function get_course_records_cache_object(): cache {
+        return cache::make('tool_odeialba', 'courserecords');
     }
 }
