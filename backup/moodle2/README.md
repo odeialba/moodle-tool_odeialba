@@ -1,12 +1,12 @@
-#Backup & Restore
+# Backup & Restore
 When I started the "Backup and restore" section of the induction process for Moodle, I saw that the documentation was missing few important points for backing up plugins related to a course. So this documentation is to make it easier for future students.
 
-##Folder structure
+## Folder structure
 This is the easy part. All the files we will create for the backup and for the restore will be placed in the same directory, which is `our_plugin_folder/backup/moodle2`, so we will proceed to create the structure.
 
 Now that we have our folder, we will continue with the next steps.
 
-##Naming
+## Naming
 During the whole process we will find moments where the name of the files/classes/functions/etc will change depending on what we are creating the backup for. Keeping that in mind, here is a list of the names used and their possibilities:
 1. `{action}`: this part indicates the action we want to perform with this file. It will be either `backup` or `restore`.
 2. `{plugintype}`: this part indicates the plugin type of the current plugin. It can be `tool`, `mod`, `theme`, etc. A full list of plugin types can be found here: https://docs.moodle.org/dev/Plugin_types
@@ -14,15 +14,15 @@ During the whole process we will find moments where the name of the files/classe
 4. `{elementtype}`: this part indicates the element you are trying to backup. This can be either `plugin`, `subplugin` or `task` (there might be more, but those are the ones I was able to find).
 5. `{belongsto}`: this part defines what element the plugin belongs to. In other words, with the backup of what element, this plugin need to be backed up. That element is the one for which the plugin is designed to.
 
-##Backup
+## Backup
 This will be the first real part of the process (Mainly because if we don't have a backup, we can't do the restore).
 
-###File
+### File
 Inside the folder `moodle2` we previously created, we need to create a `*.class.php` file with the following name format `{action}_{plugintype}_{pluginname}_{elementtype}.class.php`. Note that the name of the file is VERY important and it's divided in 4 parts. The points 1, 2, 3 and 4 from the naming section.
 
 So, in our case, the file name will be `backup_tool_odeialba_plugin.class.php`.
 
-###Code
+### Code
 It's already time to start working on our backup.
 
 In the file we just created, we need to require (after all the copyright text) the file with the abstract class that will help us with the backup. The naming of this file follows the pattern from the naming section, using the 1, 2 and 4 points of the list.
@@ -112,10 +112,10 @@ return $plugin;
 
 Now that we created the backup file for the plugin, whenever we back up the course, all the plugin's data will be backed up as well.
 
-##Restore
+## Restore
 If you already created a backup of a course and tried to restore it, you might have realised that the data of the plugin is not there. To be able to restore the plugin's data, we also need to create all the functionality to do so.
 
-###File
+### File
 We will follow the same file naming as the backup file with the only difference of changing `backup` to `restore`.
 
 So in the same directory we will create the file `restore_tool_odeialba_plugin.class.php`.
