@@ -52,21 +52,21 @@ const addListeners = () => {
 const deleteNotification = (id) => {
     require(['core/str', 'core/notification', 'core/ajax'], function(str, notification, ajax) {
         str.get_strings([
-            {'key' : 'delete'},
-            {'key' : 'confirmdelete', component : 'tool_odeialba'},
-            {'key' : 'yes'},
-            {'key' : 'no'},
+            {'key': 'delete'},
+            {'key': 'confirmdelete', component: 'tool_odeialba'},
+            {'key': 'yes'},
+            {'key': 'no'},
         ]).done(function(s) {
             notification.confirm(s[0], s[1], s[2], s[3], function() {
                 ajax.call([{
                     methodname: 'tool_odeialba_delete_record',
                     args: {id: id},
-                    done: function (data) {
+                    done: function(data) {
                         if (data.success) {
                             ajax.call([{
                                 methodname: 'tool_odeialba_display_table',
                                 args: {courseid: data.courseid},
-                                done: function (data) {
+                                done: function(data) {
                                     if (data.success) {
                                         refreshTable(data.htmltable);
                                     }
